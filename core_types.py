@@ -1,13 +1,25 @@
-"""
-Grundlegende Datentypen und Enumerationen für den IP-Analyzer
-"""
+# ///////////////////////////////////////////////////////////////
+#
+# PROJECT: IP-Analyzer TUI
+# BY: xqi
+# V: 1.0.0
+#
+# Grundlegende Datentypen und Enumerationen für den IP-Analyzer
+# Zentrale Definition aller gemeinsam genutzten Datenstrukturen
+#
+# ///////////////////////////////////////////////////////////////
 
+
+# IMPORT STATEMENTS
+# ///////////////////////////////////////////////////////////////
 import ipaddress
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, Union, List
+from typing import Dict, Union
 
 
+# ENUMERATIONS
+# ///////////////////////////////////////////////////////////////
 class IPv6BlockRole(Enum):
     """
     IPv6-Block-Rollen für bessere Klassifizierung der Adressteile
@@ -29,6 +41,8 @@ class OctetType(Enum):
     FOURTH = "4. Oktett"
 
 
+# DATA CLASSES
+# ///////////////////////////////////////////////////////////////
 @dataclass
 class JumpWidth:
     """

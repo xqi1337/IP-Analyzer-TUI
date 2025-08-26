@@ -1,9 +1,16 @@
-"""
-Equal Subnetting Solver für gleich große Subnetze
-Implementiert die Berechnung und Darstellung von gleich großen IP-Subnetzen
-"""
+# ///////////////////////////////////////////////////////////////
+#
+# PROJECT: IP-Analyzer TUI
+# BY: xqi
+# V: 1.0.0
+#
+# Equal Subnetting Solver für gleich große Subnetze
+# Implementiert die Berechnung und Darstellung von gleich großen IP-Subnetzen
+#
+# ///////////////////////////////////////////////////////////////
 
-# IMPORT STATEMENTS
+
+# IMPORTS
 # ///////////////////////////////////////////////////////////////
 import ipaddress
 import logging
@@ -21,11 +28,7 @@ logger = logging.getLogger(__name__)
 class EqualSubnettingSolver(SubnettingSolver):
     """
     Klasse für die Berechnung von gleich großen IP-Subnetzen
-    
-    Diese Klasse implementiert die Equal-Subnetting-Methode, bei der ein
-    gegebenes IP-Netzwerk in eine bestimmte Anzahl von gleich großen 
-    Subnetzen unterteilt wird.
-    
+
     Attributes:
         _solve_history: Liste der durchgeführten Subnetting-Berechnungen
     """
@@ -45,10 +48,7 @@ class EqualSubnettingSolver(SubnettingSolver):
         List[ipaddress.IPv4Network]]:
         """
         Löst Equal-Subnetting-Aufgaben durch Berechnung gleich großer Subnetze
-        
-        Diese Methode teilt ein gegebenes IP-Netzwerk in eine bestimmte Anzahl
-        von gleich großen Subnetzen auf und berechnet alle relevanten Parameter.
-        
+
         Args:
             network_str: IP-Netzwerk als String (z.B. "192.168.1.0/24")
             num_subnets: Anzahl der gewünschten Subnetze
@@ -114,7 +114,8 @@ class EqualSubnettingSolver(SubnettingSolver):
             'created_subnets': len(subnets),
             'hosts_per_subnet': jump_width - 2,
             'efficiency': efficiency,
-            'subnets': [{'network': str(subnet), 'cidr': subnet.prefixlen} for subnet in subnets[:4]]
+            'subnets': [{'network': str(subnet),
+                         'cidr': subnet.prefixlen} for subnet in subnets[:4]]
         }
         self._solve_history.append(solve_data)
 
@@ -157,7 +158,8 @@ class EqualSubnettingSolver(SubnettingSolver):
         print(f"{'':12} | {'Subnetz-ID':<15} | {'CIDR':<5} | {'Host-IP-Range':<30} | {'Broadcast':<15} | {'Hosts':<6}")
         print("-" * 95)
 
-        # Maximale Anzahl anzuzeigender Subnetze (Begrenzung für Übersichtlichkeit)
+        # Maximale Anzahl anzuzeigender Subnetze
+        # (Begrenzung für Übersichtlichkeit)
         max_show: int = min(12, len(subnets))
         
         # Iteration durch die ersten 12 Subnetze
@@ -194,7 +196,6 @@ class EqualSubnettingSolver(SubnettingSolver):
         Returns:
             List[Dict]: Kopie der Historie aller durchgeführten Berechnungen
         """
-        # Kopie zurückgeben um Manipulation der internen Daten zu verhindern
         return self._solve_history.copy()
 
     def export_results(self, filename: str) -> bool:
@@ -208,7 +209,6 @@ class EqualSubnettingSolver(SubnettingSolver):
             bool: True bei erfolgreichem Export, False bei Fehlern
         """
         try:
-            # JSON-Export mit UTF-8 Encoding für deutsche Umlaute
             with open(filename, 'w', encoding='utf-8') as f:
                 json.dump(self._solve_history, f, indent=2, ensure_ascii=False)
             

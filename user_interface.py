@@ -1,7 +1,15 @@
-"""
-Hauptbenutzeroberfläche des IP-Analyzers
-"""
+# ///////////////////////////////////////////////////////////////
+#
+# Hauptbenutzeroberfläche des IP-Analyzers
+# PROJECT: IP-Analyzer TUI
+# BY: xqi
+# V: 1.0.0
+#
+# ///////////////////////////////////////////////////////////////
 
+
+# IMPORTS
+# ///////////////////////////////////////////////////////////////
 import ipaddress
 import logging
 from pathlib import Path
@@ -13,9 +21,13 @@ from vlsm_solver import VLSMSolver
 from equal_solver import EqualSubnettingSolver
 from exercises import PredefinedExercises
 
+# LOGGING
+# ///////////////////////////////////////////////////////////////
 logger = logging.getLogger(__name__)
 
 
+# MAIN CLASS
+# ///////////////////////////////////////////////////////////////
 class UserInterface:
     """
     Erweiterte Benutzeroberfläche mit Konfiguration und Export-Features
@@ -23,6 +35,7 @@ class UserInterface:
     """
 
     def __init__(self):
+        # INITIALIZE COMPONENTS
         self.config = ConfigurationManager()
         self.calculator = SubnettingCalculator()
         self.ipv6_analyzer = IPv6Analyzer()
@@ -30,53 +43,64 @@ class UserInterface:
         self.equal_solver = EqualSubnettingSolver(self.calculator)
         self.exercises = PredefinedExercises(self.vlsm_solver, self.equal_solver)
 
-        # Export-Verzeichnis erstellen
+        # CREATE EXPORT DIRECTORY
         export_dir = Path(self.config.get('export_directory', './exports'))
         export_dir.mkdir(parents=True, exist_ok=True)
 
-        # Logging-Level setzen
+        # SET LOGGING LEVEL
         log_level = self.config.get('logging_level', 'INFO')
         logging.getLogger().setLevel(getattr(logging, log_level))
 
+    # MAIN LOOP
+    # ///////////////////////////////////////////////////////////////
     def run(self) -> None:
         """Hauptschleife der Anwendung"""
+        # SHOW WELCOME MESSAGE
         self._print_welcome()
 
+        # MAIN MENU LOOP
         while True:
             choice: str = input("Wählen Sie eine Option 0-9: ").strip()
 
+            # HANDLE USER CHOICE
             match choice:
-                case '0':
+                case '0':  # EXIT
                     self._handle_exit()
                     break
-                case '1':
+                case '1':  # IPv6 ANALYSIS
                     self._handle_ipv6_analysis()
-                case '2':
+                case '2':  # VLSM TASK
                     self._handle_vlsm_task()
-                case '3':
+                case '3':  # EQUAL SUBNETS
                     self._handle_equal_subnets()
-                case '4':
+                case '4':  # PREDEFINED EXERCISES
                     self._handle_predefined_exercises()
-                case '5':
+                case '5':  # CUSTOM VLSM
                     self._handle_custom_vlsm_task()
-                case '6':
+                case '6':  # QUICK VLSM
                     self._handle_quick_vlsm_input()
-                case '7':
+                case '7':  # EXPORT MENU
                     self._handle_export_menu()
-                case '8':
+                case '8':  # HISTORY MENU
                     self._handle_history_menu()
-                case '9':
+                case '9':  # SETTINGS MENU
                     self._handle_settings_menu()
-                case _:
+                case _:  # INVALID OPTION
                     print("Ungültige Option!")
 
+            # PRINT SEPARATOR
             print("\n" + "=" * 80)
 
+    # WELCOME MESSAGE
+    # ///////////////////////////////////////////////////////////////
     def _print_welcome(self) -> None:
         """Druckt die erweiterte Willkommensnachricht"""
+        # PRINT HEADER
         print("=" * 80)
         print("         IP-Analyzer mit Subnetting-Aufgaben-Löser (Enhanced)")
         print("=" * 80)
+        
+        # MAIN FUNCTIONS
         print("Hauptfunktionen:")
         print("[0] Beenden")
         print("[1] IPv6-Analyse (Hex/Binär)")
@@ -85,29 +109,46 @@ class UserInterface:
         print("[4] Alle Übungsaufgaben lösen")
         print("[5] Benutzerdefinierte VLSM-Aufgabe erstellen")
         print("[6] Schnelle VLSM-Eingabe (Netz + Hosts)")
+        
+        # EXTENDED FUNCTIONS
         print("\nErweiterte Funktionen:")
         print("[7] Export-Menü")
         print("[8] Historie anzeigen")
         print("[9] Einstellungen")
         print()
 
+    # EXIT HANDLER
+    # ///////////////////////////////////////////////////////////////
     def _handle_exit(self) -> None:
         """Behandelt das ordnungsgemäße Beenden der Anwendung"""
+        # GOODBYE MESSAGE
         print("Auf Wiedersehen!")
+        # LOG EXIT
         logger.info("Anwendung beendet")
 
+    # IPv6 ANALYSIS HANDLER
+    # ///////////////////////////////////////////////////////////////
     def _handle_ipv6_analysis(self) -> None:
         """Behandelt IPv6-Analyse mit optionalem Export"""
+        # PRINT SECTION HEADER
         print("\n--- IPv6-Analyse ---")
+        
+        # GET USER INPUT
         ipv6_input: str = input("IPv6‑Adresse (Hex oder Binär): ").strip()
+        
+        # ANALYZE ADDRESS
         result = self.ipv6_analyzer.analyze(ipv6_input)
 
+        # OFFER EXPORT IF ANALYSIS SUCCESSFUL
         if result:
             export_choice = input("\nMöchten Sie das Ergebnis exportieren? (j/n): ").strip().lower()
             if export_choice in ['j', 'ja', 'y', 'yes']:
+                # GET FILENAME OR GENERATE DEFAULT
                 filename = input(
                     "Dateiname (ohne .json): ").strip() or f"ipv6_analysis_{len(self.ipv6_analyzer.get_analysis_history())}"
+                # CREATE EXPORT PATH
                 export_path = Path(self.config.get('export_directory')) / f"{filename}.json"
+                # EXPORT AND CONFIRM
                 if self.ipv6_analyzer.export_history(str(export_path)):
                     print(f"✓ Ergebnis exportiert nach: {export_path}")
 
@@ -443,6 +484,9 @@ class UserInterface:
         proceed: str = input("\nMöchten Sie die VLSM-Berechnung durchführen? (j/n): ").strip().lower()
         return proceed in ['j', 'ja', 'y', 'yes']
 
+    # ERROR HANDLING
+    # ///////////////////////////////////////////////////////////////
     def _print_invalid_input(self) -> None:
         """Standardisierte Fehlermeldung für ungültige Benutzereingaben"""
+        # STANDARD ERROR MESSAGE
         print("Ungültige Eingabe! Bitte versuchen Sie es erneut.")
