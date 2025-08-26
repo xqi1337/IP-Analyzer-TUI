@@ -1,9 +1,10 @@
 # ///////////////////////////////////////////////////////////////
 #
-# IPv6-Adressanalyse mit Hex- und Binärkonvertierung
 # PROJECT: IP-Analyzer TUI
 # BY: xqi
 # V: 1.0.0
+#
+# IPv6-Adressanalyse mit Hex- und Binärkonvertierung
 #
 # ///////////////////////////////////////////////////////////////
 
