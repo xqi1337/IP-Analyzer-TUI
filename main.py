@@ -1,7 +1,7 @@
 # ///////////////////////////////////////////////////////////////
 #
+# PROJECT: IP-Analyzer TUI
 # BY: xqi
-# PROJECT: IP-Analyzer TUI  
 # V: 1.0.0
 #
 # IP-Analyzer (Hex/Binär) mit Subnetting Berechnungen
